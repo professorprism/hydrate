@@ -12,7 +12,7 @@ class FoodState
 { 
   List<Munch> munchies;
 
-  FoodState(this.munchies);
+  FoodState(this.munchies); // constructor
 
   // turns the object into a map
   // I think this does not work.  It's too hard.
@@ -39,7 +39,18 @@ class FoodState
   // turn a map back into an object
   factory FoodState.fromMap(Map<String,dynamic> map)
   {
-    return FoodState( map['munchies'] );
+    List<Munch> theList = [];
+    int length = map['length'];
+    for ( int i=0; i<length; i++ )
+    {
+      String f = map['food$i'];
+      String d = map['when$i'];
+      Munch m = Munch( f, d );
+      theList.add(m);
+    }
+    return FoodState( theList );
+
+    // return FoodState( map['munchies'] );
   }
 
   // turns the object into JSON.  Does this by 

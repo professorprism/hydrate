@@ -90,8 +90,17 @@ class Core extends StatelessWidget
     List<Widget> kids = [];
     for ( Munch m in theList )
     { 
-      String s = m.what;
-      kids.add(Text(s));
+      //String s = m.what;
+      //kids.add(Text(s));
+      kids.add
+      ( Row
+        ( children:
+          [ Text( m.what ),
+            Spacer(),
+            Text( m.when ),
+          ],
+        )
+      );
     }
 
     ListView lv = ListView
