@@ -18,9 +18,22 @@ class FoodState
   // I think this does not work.  It's too hard.
   Map<String,dynamic> toMap()
   { 
-    return
-    { 'munchies' : munchies ,
-    };
+    Map<String,dynamic> theMap = {};
+    int length = munchies.length; 
+    theMap['length'] = length;
+
+    //int i = 0;
+    //for ( Munch m in munchies )
+    for ( int i=0; i<length; i++ )
+    { 
+       theMap['food$i'] = munchies[i].what;
+       theMap['when$i'] = munchies[i].when;
+    }
+    return theMap;
+
+    //return
+    //{ 'munchies' : munchies ,
+    //};
   } 
   
   // turn a map back into an object
@@ -39,7 +52,7 @@ class FoodState
    
 }
 
-class FoodCubit extends /*Hydrated*/Cubit<FoodState> // with HydratedMixin
+class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 {
   FoodCubit() : super( FoodState([ Munch("apple",/*99*/ "2025-01-02 10:43:17" ),
                                    Munch("banana", /*99*/"2025-01-03 8:41:00" ),
@@ -57,14 +70,14 @@ class FoodCubit extends /*Hydrated*/Cubit<FoodState> // with HydratedMixin
   // converts the map form of FDState into an object.
   // Should have been called fromMap, as the Hydrated stuff
   // will have already converted it from JSON to a map.
-  // @override
+  @override
   FoodState fromJson( Map<String,dynamic> map)
   { return FoodState.fromMap(map); }
 
   // This is called on state AFTER emit(state).  Every time there is a new
   // state, this function converts it to a Map and the Hydrated
   // stuff takes it from there.  
-  // @override
+  @override
   Map<String,dynamic> toJson( FoodState state )
   { return state.toMap(); }
   
