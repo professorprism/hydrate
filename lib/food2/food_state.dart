@@ -77,6 +77,7 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
     emit( FoodState(state.munchies) );
   }
 
+  void reset() { emit( FoodState([]) ); }
   
   // converts the map form of FDState into an object.
   // Should have been called fromMap, as the Hydrated stuff
