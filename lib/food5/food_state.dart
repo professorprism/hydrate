@@ -12,21 +12,45 @@ class FoodState
 { 
   List<Munch> munchies;
 
-  FoodState(this.munchies);
+  FoodState(this.munchies); // constructor
 
   // turns the object into a map
   // I think this does not work.  It's too hard.
   Map<String,dynamic> toMap()
   { 
-    return
-    { 'munchies' : munchies ,
-    };
+    Map<String,dynamic> theMap = {};
+    int length = munchies.length; 
+    theMap['length'] = length;
+
+    //int i = 0;
+    //for ( Munch m in munchies )
+    for ( int i=0; i<length; i++ )
+    { 
+       theMap['food$i'] = munchies[i].what;
+       theMap['when$i'] = munchies[i].when;
+    }
+    return theMap;
+
+    //return
+    //{ 'munchies' : munchies ,
+    //};
   } 
   
   // turn a map back into an object
   factory FoodState.fromMap(Map<String,dynamic> map)
   {
-    return FoodState( map['munchies'] );
+    List<Munch> theList = [];
+    int length = map['length'];
+    for ( int i=0; i<length; i++ )
+    {
+      String f = map['food$i'];
+      String d = map['when$i'];
+      Munch m = Munch( f, d );
+      theList.add(m);
+    }
+    return FoodState( theList );
+
+    // return FoodState( map['munchies'] );
   }
 
   // turns the object into JSON.  Does this by 
@@ -39,7 +63,7 @@ class FoodState
    
 }
 
-class FoodCubit extends /*Hydrated*/Cubit<FoodState> // with HydratedMixin
+class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 {
   FoodCubit() : super( FoodState([ Munch("apple",/*99*/ "2025-01-02 10:43:17" ),
                                    Munch("banana", /*99*/"2025-01-03 8:41:00" ),
@@ -53,18 +77,19 @@ class FoodCubit extends /*Hydrated*/Cubit<FoodState> // with HydratedMixin
     emit( FoodState(state.munchies) );
   }
 
+  void reset() { emit( FoodState([]) ); }
   
   // converts the map form of FDState into an object.
   // Should have been called fromMap, as the Hydrated stuff
   // will have already converted it from JSON to a map.
-  // @override
+  @override
   FoodState fromJson( Map<String,dynamic> map)
   { return FoodState.fromMap(map); }
 
   // This is called on state AFTER emit(state).  Every time there is a new
   // state, this function converts it to a Map and the Hydrated
   // stuff takes it from there.  
-  // @override
+  @override
   Map<String,dynamic> toJson( FoodState state )
   { return state.toMap(); }
   

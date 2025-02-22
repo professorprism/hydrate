@@ -77,32 +77,47 @@ class Core extends StatelessWidget
           ( onPressed: (){ fc.addFood(tec.text); },
             child: Text("submit"),
           ),
+          ResetButton(),
         ],
       ),
     );
   }     
 
-  ListView makeListView( BuildContext context )
+  Widget makeListView( BuildContext context )
   { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
     FoodState fs = fc.state;
     List<Munch> theList = fs.munchies;
 
     List<Widget> kids = [];
     for ( Munch m in theList )
-    { 
-      String s = m.what;
-      kids.add(Text(s));
+    { String t = DateTime.parse(m.when).hour.toString();
+      String label = "$t ${m.what}";
+      kids.add
+      ( ElevatedButton
+        ( onPressed: (){},
+          child:  Text( label ),
+        )
+      );
     }
 
+    Wrap wr = Wrap
+    ( children:kids,
+    );
     ListView lv = ListView
     ( scrollDirection: Axis.vertical,
-      itemExtent: 30,
-      children: kids,
+      // itemExtent: 30,
+      children: [wr],
     );
-
     return lv;
   }
+}
 
-
-
+class ResetButton extends StatelessWidget
+{ Widget build( BuildContext context )
+  { FoodCubit fc = BlocProvider.of<FoodCubit>(context);
+    return ElevatedButton
+    ( onPressed: (){ fc.reset(); },
+      child: Text("reset"),
+    );
+  }
 }
