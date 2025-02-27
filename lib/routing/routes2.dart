@@ -1,7 +1,30 @@
 // routes2.dart
 // Barrett Koster
-// demo of Routing/Navigation
-// this one does the routing with NAMED routes.
+// demo of Routing/Navigation.
+// This one does the routing with NAMED routes.
+// We provide the ONE CounterCubit before we even
+// do the first MaterialApp, to make the Cubit available
+// to all below.  The MaterialApp has a 'routes' 
+// property where you can specify Routes/pages.  Note that
+// each of the pages/Routes is a MaterialPageRoute, which
+// means that the CounterCubit access will NOT be passed
+// down through context.  So we need to get the CounterCubit 
+// from the context before we are down in the
+// context of the new MaterialPageRoute (but of course it
+// has to AFTER we make it).  The line
+// { "/" : (con) 
+// is the right place, the function that is making the
+// new MaterialPageRoute from the exiting context 'con'.
+// In the routes.dart version, we pass the cc as an 
+// argument to the Route, but here, by doing the BlocProvider
+// with the RouteX as a child, we establish the Cubit
+// just inside the top of the new MaterialPageRoute.
+// Note that we use the ".value" form of the BlocProvider
+// to use the cc that we just fetch, not make a new Cubit.
+// Oh, one more thing: use the "Navigator .... pushNamed" 
+// form of the push command to use the named routes.  Oh,
+// and the first one has to be "/".  Since there is no "home:"
+// any more, this is the default.
 
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -25,7 +48,6 @@ void main()
 class RoutesDemo extends StatelessWidget
 {
   RoutesDemo({super.key});
-  // final CounterCubit cc = CounterCubit();
 
   @override
   Widget build( BuildContext context )

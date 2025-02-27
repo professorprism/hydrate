@@ -2,6 +2,23 @@
 // Barrett Koster
 // demo of Routing/Navigation
 // this one does the routing with GENERATED routes.
+// The Router class handles what was previously
+// in the "routes:" section of the MaterialApp,
+// which is replaced with "onGenerateRoute: routy.getRoute,"
+// where routy is the instance of the Router class we
+// make in the top Widget to get it started,
+// and getRoute() is the function that generates the specified
+// route.  The function takes a parameter whose ".name" 
+// property contains the nameString you give it when you call
+// "Navigator .... pushNamed(nameString)", and it returns a
+// MaterialPageApp just like the routes2.dart version.
+// As for providing the CounterCubit, routy is now the 
+// provider of the cubit.  It makes a cubit when it is created,
+// and we insert the BlocProvider.value layer just after each
+// MaterialPageApp and before we call the RouteX(), just
+// like routes2.dart.  THe one difference there is that ...
+// we lose the auto-delete of BlocProvider, so we have to add
+// cc.close() in a dispose() method at the bottom of Router.
 
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -21,6 +38,7 @@ class CounterCubit extends Cubit<CounterState>
 
 class Router
 { CounterCubit cc = CounterCubit();
+
   Route genRoute( RouteSettings settings )
   { return settings.name=="/"
     ? MaterialPageRoute

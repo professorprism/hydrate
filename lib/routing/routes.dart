@@ -1,5 +1,7 @@
 // Barrett Koster
 // demo of Routing/Navigation
+// Thisis the first version, simple.  
+// The button names a new Route.
 
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -34,6 +36,7 @@ class RoutesDemo extends StatelessWidget
   }
 }
 
+// TobBloc layer makes/provides the CounterCubit.
 class TopBloc extends StatelessWidget
 {
   @override
@@ -48,6 +51,9 @@ class TopBloc extends StatelessWidget
   }
 }
 
+// This is page 1.  Note that we are already inside a
+// MaterialApp, and the CounterCubit can be extracted
+// from the context, so all we need is Scaffold.
 class Route1 extends StatelessWidget
 { final String title = "Route1";
 
@@ -80,6 +86,11 @@ class Route1 extends StatelessWidget
   }
 }
 
+// Route2.  This is inside a MaterialPageRoute, so it
+// just needs the Scaffold.  But, we start with 
+// BlocProvider.value  *VALUE*  to take the existing
+// CounterCubit passed as an argument. Then there's
+// the BlocBuilder layer and then the Scaffold.
 class Route2 extends StatelessWidget
 { final String title = "Route2";
   final   CounterCubit cc;
