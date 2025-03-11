@@ -91,7 +91,7 @@ class Racer1 extends StatelessWidget
   // note: this gets called every time Racer1 (re) builds, and 
   // the 'emit()' in go1mile() triggers a rebuild (so it is an
   // infinite loop.
-  void running(BuildContext bc) async
+  Future<void> running(BuildContext bc) async
   { RunnerCubit rc = BlocProvider.of<RunnerCubit>(bc);
     int howMuch = randy.nextInt(500) + 100;
     await Future.delayed( Duration(milliseconds:howMuch) );

@@ -1,7 +1,7 @@
 // Barrett Koster 2024
 // demo of pinging a database of images
 
-import 'dart:convert';
+import 'dart:convert'; // for JSON decode
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;

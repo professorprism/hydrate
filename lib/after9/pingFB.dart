@@ -1,6 +1,7 @@
 // Barrett Koster 2024
 // demo of pinging a database of images
-// uses FutureBuilder
+// uses FutureBuilder, but it still has BLoC in it,
+// so this is not really a demo of FutureBuilder yet.
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
