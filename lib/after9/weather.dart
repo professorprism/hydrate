@@ -1,4 +1,4 @@
-// api key 576df1424ac54348ac8213823242110
+// api key bbc3a4e69f5a40b9b35203718251103
 // weatherapi.com
 
 // Barrett Koster 2024
@@ -97,7 +97,7 @@ class Weather1 extends StatelessWidget
   Future<String> _networkCall(int x) async
   {
     final url = Uri.parse('http://api.weatherapi.com/v1/current.json'
-       '?key=576df1424ac54348ac8213823242110&q=90802&aqi=no');
+       '?key=bbc3a4e69f5a40b9b35203718251103&q=90802&aqi=no');
     final response = await http.get(url);
     Map<String,dynamic> dataAsMap = jsonDecode(response.body);
     // print(dataAsMap);
