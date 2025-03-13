@@ -39,7 +39,7 @@ class WeatherCubit extends Cubit<WeatherModel>
   Future<void> update( String zip) async
   {
     final url = Uri.parse('http://api.weatherapi.com/v1/current.json'
-       '?key=bbc3a4e69f5a40b9b35203718251103&q=${zip}&aqi=no');
+       '?key=bbc3a4e69f5a40b9b35203718255103&q=${zip}&aqi=no');
     final response = await http.get(url);
     emit( WeatherModel.fromJSON(response) );
 
