@@ -59,6 +59,21 @@ class FoodState
     theMap['munchies'] = munchies;
     return theMap;
   }
+  /* So far this is doing the recursion but also getting confused about
+     the nested encodings.  So we have 
+----- Munch encoded as {"what":"apple","when":"2025-01-02 10:43:17"}
+     which seems correct, but then 
+ ----- FoodState encoded as {"munchies":["{\"what\":\"apple\",\"when\":\"2025-01-02 10:43:17\"}",
+                                         "{\"what\":\"ban ....
+     which takes the encoding as a string and then back-slashes all of the quotes inside.
+     If you did it again, it would presumably back-slash all of the back-slashes, leading
+     to a recursive mess.  And while that mess is theoretically unpackable, I am
+     pretty sure you are not supposed to do it that way (the JSON is not supposed
+     to look like this).  
+        But on the good side, the encode function IS recursing.  Maybe we can force 
+     it to use toMap(), not toJson().  Try deleting the to/fromJson methods from
+     Munch.  See if it uses the map (which may work right).   .. with v3 here.
+  */
   
 
   // fromMap() ... turn the map back into an object
