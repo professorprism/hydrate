@@ -1,6 +1,8 @@
 // food_diary.dart 
 // Barrett Koster
-// working on the core page
+// 
+// this is version 6, and we are trying to make the state
+// recursive, or at least have a little depth (not just String:String).
 
 import "dart:io";
 import 'package:flutter/material.dart';
@@ -27,11 +29,10 @@ Future<void> hydratePrep() async
     ( (await getApplicationDocumentsDirectory()).path,),
   );
   print("add=$add");
-  
 }
 
 class FoodDiary extends StatelessWidget
-{ static const String header = "Food Diary 5";
+{ static const String header = "Food Diary 6";
 
   const FoodDiary({super.key});
 
@@ -63,7 +64,7 @@ class Core extends StatelessWidget
     FoodState fs = fc.state;
     TextEditingController tec = TextEditingController();
 
-    // print("json=${fs.toJson()}"); fail, it's too hard
+    print("json=${fs.toJson()}"); // debugging
 
     return Scaffold
     ( appBar: AppBar(  title: Text(title),),

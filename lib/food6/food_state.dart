@@ -1,0 +1,157 @@
+// food_state.dart
+// Barrett Koster 2025
+// 
+// food5 did a flat map, even though our state could have
+// recursive layers.  food6 should do those layers.
+
+import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+
+import 'munch.dart';
+
+
+class FoodState
+{ 
+  List<Munch> munchies;
+
+  FoodState(this.munchies); // constructor
+
+  // turns the object into a map
+  // v1 This flattens the structure, so ... we take everything
+  // out of the list and make its parts key:value pairs in
+  // the top level of this map.  This works.
+  Map<String,dynamic> toMap1() // 1
+  { print("----- FoodState.toMap: starting ...");
+    Map<String,dynamic> theMap = {};
+    int length = munchies.length; 
+    theMap['length'] = length;
+    for ( int i=0; i<length; i++ )
+    { 
+       theMap['food$i'] = munchies[i].what;
+       theMap['when$i'] = munchies[i].when;
+    }
+    print("----- FoodState.toMap: returning ...");
+    return theMap;
+  } 
+  
+  // v2 This toMap() uses a little bit of depth.  
+  // I am storing the munchies as just a list of foods (and we
+  // are losing the 'when' field), but I leave the list as a
+  // list in the map.  So the JSON en/de-code must know how
+  // un pack and unpack the list.  
+  Map<String,dynamic> toMap() // 2 
+  { Map<String,dynamic> theMap = {};
+
+    List<String> foods = [];
+    for ( Munch m in munchies )
+    { String food = m.what;
+      foods.add(food);
+    }
+    theMap['munchies'] = foods;
+
+    return theMap;
+  }
+
+  // This is the totally recursive attempt.  
+  Map<String,dynamic> toMap3() // 3
+  { Map<String,dynamic> theMap = {};
+    theMap['munchies'] = munchies;
+    return theMap;
+  }
+  
+
+  // fromMap() ... turn the map back into an object
+  
+  // v1 This one is flat.  The Munch objects are all done
+  // thru top level keys, so we pull them out of this flat
+  // structure and re-make the Munch objects.
+  // This one works.
+  factory FoodState.fromMap1(Map<String,dynamic> map) // 1
+  { print("----- FoodState.fromMap: starting ...");
+    List<Munch> theList = [];
+    int length = map['length'];
+    for ( int i=0; i<length; i++ )
+    {
+      String f = map['food$i'];
+      String d = map['when$i'];
+      Munch m = Munch( f, d );
+      theList.add(m);
+    }
+    print("----- FoodState.fromMap: returning ...");
+    return FoodState( theList );
+  }
+
+  // v2 This one is trying to do hydrate with a list of strings.
+  // It loses the dates, so we have to make dummy dates to 
+  // re-make the Munch objects for FoodState.  But this one
+  // WORKS.  
+  factory FoodState.fromMap( Map<String,dynamic> theMap ) // 2
+  {
+    List<String> foods = theMap['munchies'];
+    List<Munch> munchies = [];
+    for ( String food in foods )
+    { munchies.add( Munch(food, "99" ) ); }
+
+    return FoodState( munchies );
+  }
+
+  // v3 This one is trying to use full recursive structure.
+  // This does not work yet.
+  factory FoodState.fromMap3( Map<String,dynamic> theMap) // 3
+  {
+    List<Munch> munchies = theMap['munchies'] ?? [];
+    return FoodState(munchies);
+  }
+  
+
+  // turns the object into JSON.  Does this by 
+  // call toMap and then encode() ing the map.
+  String toJson()
+  { String s  =  json.encode(toMap());
+    print("----- FoodState encoded as $s");
+    return s;
+  }
+
+  // I am not sure this EVER worked.
+  // turns Json back into an objevct.  
+  factory FoodState.fromJson( String source) 
+  { print("----- FoodState.fromJson is making object from $source");
+    return FoodState.fromMap( json.decode(source));
+  }
+   
+}
+
+class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
+{
+  FoodCubit() : super( FoodState([ Munch("apple",/*99*/ "2025-01-02 10:43:17" ),
+                                   Munch("banana", /*99*/"2025-01-03 8:41:00" ),
+                                 ]) );
+
+  void setFood(List<Munch> m ) { emit( FoodState(m) ); }
+
+  void addFood( String f )
+  { Munch m = Munch( f, /*99*/ DateTime.now().toString() );
+    state.munchies.add(m);
+    emit( FoodState(state.munchies) );
+  }
+
+  void reset() { emit( FoodState([]) ); }
+  
+  // converts the map form of FDState into an object.
+  // Should have been called fromMap, as the Hydrated stuff
+  // will have already converted it from JSON to a map.
+  @override
+  FoodState fromJson( Map<String,dynamic> map)
+  { return FoodState.fromMap(map); }
+
+  // This is called on state AFTER emit(state).  Every time there is a new
+  // state, this function converts it to a Map and the Hydrated
+  // stuff takes it from there.  
+  @override
+  Map<String,dynamic> toJson( FoodState state )
+  { return state.toMap(); }
+  
+
+}
+
