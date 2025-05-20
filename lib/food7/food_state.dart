@@ -24,6 +24,7 @@ class FoodState
     print("");
   } // constructor
 
+  // toMap()
   // turns the object into a map.
   // Note: the 'toEncodable' stuff is not working, so we are making
   // this map to be ONLY things that JSON encoder knows how to 
@@ -42,7 +43,7 @@ class FoodState
     return theMap;
   }
 
-  // like a contructor.
+  // factory FoodState.fromMap() .... like a contructor.
   // theMap we are using now is a JSON-readable map, so just strings,
   // ints, lists and more maps.  No Munch or other objects.
   // Flutter could handle maps of whatever, per say, but the 
@@ -55,7 +56,8 @@ class FoodState
     // The decode of the map is a list of little 2-item maps.  We want
     // turn those little maps into Munch objects, but they are not that yet.
     print("===== about to referene theMap");
-    dynamic mmaps = theMap['munchies']; // crash
+    dynamic mmaps = theMap['munchies']; // crashed when not 'dynamic'
+      // and caused the Hydrate-load to fail but no error was given
     print("===== just referenced theMap");
     for ( Map<String,dynamic> mmap in mmaps )
     {
@@ -72,12 +74,10 @@ class FoodState
 
   // turns the object into JSON.  Does this by 
   // call toMap and then encode() ing the map.
-  // Note the toEncodable: method.  If an item in the encoding is
+  // Note the 'toEncodable' method.  If an item in the encoding is
   // not a standard one, it calls this function.
-  // In some examples they call toJson, but if you do that (to a String)
-  // you get an extra layer of quotes and backslashes.  Doing toMap
-  // for the unknown items ends up with the right encoding (which I verified by
-  // printing it out).
+  // Our map is presently made of all standard things, so this
+  // is not used that I know of.
   String toJson()
   { print("----- FoodState.toJson: starting ... ");
     // String s  =  json.encode(toMap());
@@ -125,9 +125,12 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
 
   void reset() { emit( FoodState([]) ); }
   
-  // converts the map form of FDState into a FoodState object.
+  // fromJson()
+  // converts the map form of FoodState into a FoodState object.
   // Should have been called fromMap, as the Hydrated stuff
   // will have already converted it from JSON to a map.
+  // Note: the map is just the regular stuff that JSON encode/decode
+  // knows how to handle.  There are no Munch objects.
   @override
   FoodState fromJson( Map<String,dynamic> map)
   { print("----- FoodCubit.fromJson: starting on $map");
@@ -140,7 +143,6 @@ class FoodCubit extends HydratedCubit<FoodState> // with HydratedMixin
   @override
   Map<String,dynamic> toJson( FoodState state )
   { print("----- FoodCubit.toJson: starting ...");
-    // return state.toMap();
     Map<String,dynamic> theMap = state.toMap();
     print("FoodCubit.toJson about to return $theMap");
     return theMap;
