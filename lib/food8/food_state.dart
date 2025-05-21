@@ -61,12 +61,13 @@ class FoodState
     print("===== just referenced theMap");
     for ( Map<String,dynamic> mmap in mmaps )
     { munchies.add( Munch.fromMap(mmap) );
-      /* // to do: use Munch.toMap to do this, avoid Munch detail here
+       /*
        String wut = mmap['what'] ?? "dk";
        String wen = mmap['when'] ?? "dk";
        print("     about to make Munch($wut,$wen)");
        Munch m = Munch( mmap['what']!, mmap['when']!);
-       munchies.add(m);*/
+       munchies.add(m);
+       */
     }
     print("------- FoodState.fromMap: returning made from $munchies");
     return FoodState(munchies);
